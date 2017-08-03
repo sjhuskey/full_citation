@@ -1,0 +1,4 @@
+name = Full Citation
+description = Provides the function for computing the value of the computed field Full Citation
+core = 7.x
+dependencies[] = computed_field

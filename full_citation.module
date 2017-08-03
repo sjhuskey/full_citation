@@ -1,0 +1,40 @@
+<?php
+
+/** 
+* Provides the functions for the computed field Full Citation in LDLT Bibliography
+* @author Samuel J. Huskey (huskey@ou.edu)
+*/
+
+function full_citation_computed_field_field_full_citation_compute(&$entity_field, $entity_type, $entity, $field, $instance, $langcode, $items) {
+    $entity_field[0]['value'] = "";
+// Define some variables common to both journal articles and books.
+    $creator = $entity->field_creator['und'][0]['value'];
+    $date = $entity->field_date['und'][0]['value'];
+    $record_title = $entity->field_record_title['und'][0]['value'];
+
+// If the item is a journal article, add appropriate variables
+    if ($entity->field_item_type['und'][0]['tid'] == '3884') {
+        // Add the fields particular to journal articles
+        $publication_title = $entity->field_publication_title['und'][0]['value'];
+        $volume = $entity->field_volume['und'][0]['value'];
+        $pagination = $entity->field_pagination['und'][0]['value'];
+        }
+// If the item is a book, add appropriate variables.
+    if ($entity->field_item_type['und'][0]['tid'] == '3883') {
+        $publisher = $entity->field_publisher['und'][0]['value'];
+        $place = $entity->field_place_of_publication['und'][0]['value'];
+        }
+
+// Output in the correct format
+    if ($entity->field_item_type['und'][0]['tid'] == '3884') {
+           $output = $creator . '. ' . $date . '. ' . '"' . $record_title . '." ' . '<em>' . $publication_title . '</em> ' . $volume . ': ' . $pagination . '.';
+           }
+    else {
+            $output = $creator . '. ' . $date . '. ' . '<em>' . $record_title . '</em>. ' . $place . ': ' . $publisher . '.'; 
+            }
+    $entity_field[0]['value'] = $output;
+}
+
+function full_citation_computed_field_field_full_citation_display($field, $entity_field_item, $entity_lang, $langcode, $entity) {
+    $display_output = $entity_field_item['value'];
+}
